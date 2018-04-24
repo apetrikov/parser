@@ -4,11 +4,12 @@
   "description": "Собирает HTML из файла",
   "main": "index.js",
   "scripts": {
-    "start": "nodejs index.js"
+    "start": "node index.js"
   },
   "author": "apetrikov",
   "license": "ISC",
   "dependencies": {
-    "express": "^4.16.3"
+    "express": "^4.16.3",
+    "node-json2html": "^1.2.0"
   }
 }
