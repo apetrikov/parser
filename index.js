@@ -29,16 +29,31 @@ function task1(arr) {
   return resArr.map(item => parse(item)).join('');
 }
 
+function task2(arr) {
+  const resArr = [];
+  arr.forEach(item => Object.entries(item).map(row => resArr.push({ [row[0]]: row[1] })));
+  const parse = (obj) => {
+    const key = Object.keys(obj)[0];
+    const rule = {'<>':key,'html':'${' + key + '}'};
+    return json2html.transform(JSON.stringify(obj), rule);
+  }
+  return resArr.map(item => parse(item)).join('');
+}
+
 const html1 = task1(raw1);
+const html2 = task2(raw2);
 
 app.get('/', function (req, res) {
-  const tests = () => html1 === answers.answer1;
+  const tests = () => html1 === answers.answer1 && html2 === answers.answer2;
   res.send(tests());
 });
 
 app.get('/1', function (req, res) {
-  // console.log(html);
   res.send(html1);
+});
+
+app.get('/2', function (req, res) {
+  res.send(html2);
 });
 
 app.listen(3000, function () {
