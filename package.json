@@ -1,0 +1,14 @@
+{
+  "name": "parser",
+  "version": "1.0.0",
+  "description": "Собирает HTML из файла",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodejs index.js"
+  },
+  "author": "apetrikov",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.16.3"
+  }
+}
