@@ -45,14 +45,35 @@ function task3(arr) {
   return '<ul>' + resArr.map(item => '<li>' + task2(item) + '</li>').join('') + '</ul>';
 }
 
+function task4(arr) {
+  function makeList(arr) {
+    const resArr = [];
+    arr.forEach(item => Object.entries(item).map(row => {
+      const body = Array.isArray(row[1]) ? task4(row[1]) : row[1];
+      return resArr.push({ [row[0]]: body });
+    }));
+    const parse = (obj) => {
+      const key = Object.keys(obj)[0];
+      const rule = {'<>':key,'html':'${' + key + '}'};
+      return json2html.transform(JSON.stringify(obj), rule);
+    }
+    return resArr.map(item => parse(item)).join('');
+  }
+  const resArr = arr.map(item => Object.entries(item).map(row => ({ [row[0]]: row[1] })));
+  return '<ul>' + resArr.map(item => '<li>' + makeList(item) + '</li>').join('') + '</ul>';
+}
+
 const html1 = task1(raw1);
 const html2 = task2(raw2);
 const html3 = task3(raw3);
+const html41 = task4(raw41);
+// const html42 = task4(raw42);
 
 app.get('/', function (req, res) {
   const tests = () => html1 === answers.answer1
     && html2 === answers.answer2
-    && html3 === answers.answer3;
+    && html3 === answers.answer3
+    && html41 === answers.answer41;
   res.send(tests());
 });
 
@@ -67,6 +88,14 @@ app.get('/2', function (req, res) {
 app.get('/3', function (req, res) {
   res.send(html3);
 });
+
+app.get('/41', function (req, res) {
+  res.send(html41);
+});
+
+// app.get('/42', function (req, res) {
+//   res.send(html42);
+// });
 
 app.listen(3000, function () {
   console.log('Сервер поднят на 3000!');
