@@ -40,11 +40,19 @@ function task2(arr) {
   return resArr.map(item => parse(item)).join('');
 }
 
+function task3(arr) {
+  const resArr = arr.map(item => Object.entries(item).map(row => ({ [row[0]]: row[1] })));
+  return '<ul>' + resArr.map(item => '<li>' + task2(item) + '</li>').join('') + '</ul>';
+}
+
 const html1 = task1(raw1);
 const html2 = task2(raw2);
+const html3 = task3(raw3);
 
 app.get('/', function (req, res) {
-  const tests = () => html1 === answers.answer1 && html2 === answers.answer2;
+  const tests = () => html1 === answers.answer1
+    && html2 === answers.answer2
+    && html3 === answers.answer3;
   res.send(tests());
 });
 
@@ -54,6 +62,10 @@ app.get('/1', function (req, res) {
 
 app.get('/2', function (req, res) {
   res.send(html2);
+});
+
+app.get('/3', function (req, res) {
+  res.send(html3);
 });
 
 app.listen(3000, function () {
