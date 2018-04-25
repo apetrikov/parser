@@ -13,6 +13,7 @@ const raw42 = require('./src/source4_2.json');
 const raw5 = require('./src/source5.json');
 const answers = require('./src/answers');
 
+// Решение 1 задачи
 function task1(arr) {
   const resArr = [];
   const h1 = {'<>':'h1','html':'${title}'};
@@ -29,6 +30,7 @@ function task1(arr) {
   return resArr.map(item => parse(item)).join('');
 }
 
+// Решение 2 задачи
 function task2(arr) {
   const resArr = [];
   arr.forEach(item => Object.entries(item).map(row => resArr.push({ [row[0]]: row[1] })));
@@ -40,11 +42,13 @@ function task2(arr) {
   return resArr.map(item => parse(item)).join('');
 }
 
+// Решение 3 задачи
 function task3(arr) {
   const resArr = arr.map(item => Object.entries(item).map(row => ({ [row[0]]: row[1] })));
   return '<ul>' + resArr.map(item => '<li>' + task2(item) + '</li>').join('') + '</ul>';
 }
 
+// Решение 4 задачи
 function task4(item) {
   const parse = (obj) => {
     const key = Object.keys(obj)[0];
@@ -64,6 +68,8 @@ function task4(item) {
   return '<ul>' + resArr.map(item => '<li>' + makeList(item) + '</li>').join('') + '</ul>';
 }
 
+
+// Решение 5 задачи
 function task5(item) {
   const parse = (obj) => {
     const key = Object.keys(obj)[0];
@@ -115,6 +121,7 @@ const html41 = task4(raw41);
 const html42 = task4(raw42);
 const html5 = task5(raw5);
 
+// На основной странице результаты сверки с ответами из задания
 app.get('/', function (req, res) {
   const tests = [html1 === answers.answer1,
     html2 === answers.answer2,
