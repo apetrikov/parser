@@ -9,7 +9,6 @@
   "author": "apetrikov",
   "license": "ISC",
   "dependencies": {
-    "express": "^4.16.3",
-    "node-json2html": "^1.2.0"
+    "express": "^4.16.3"
   }
 }

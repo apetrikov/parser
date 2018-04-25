@@ -2,7 +2,7 @@
 // Берёт файл, обрабатывает, выводит результат на порт 3000
 
 const express = require('express');
-const json2html = require('node-json2html');
+const json2html = require('./lib/node-json2html');
 const app = express();
 
 const raw1 = require('./src/source1.json');
@@ -64,19 +64,65 @@ function task4(item) {
   return '<ul>' + resArr.map(item => '<li>' + makeList(item) + '</li>').join('') + '</ul>';
 }
 
+function task5(item) {
+  const parse = (obj) => {
+    const key = Object.keys(obj)[0];
+    function func(key) {
+      const regClass = /\.[a-zA-Z0-9-]+/g;
+      const regId = /#[a-zA-Z0-9-]+/g;
+      const regTag = /^[a-zA-Z0-9-]+/g;
+      return {
+        tag: key.match(regTag)[0],
+        class: key.match(regClass) && key.match(regClass).map(item => item.slice(1)).join(' '),
+        id: key.match(regId) && key.match(regId)[0].slice(1)
+      };
+    };
+    var rule = {
+      '<>':func(key).tag,
+      'text': obj[key]
+    };
+    func(key).id && (rule['id'] = func(key).id);
+    func(key).class && (rule['class'] = func(key).class);
+    return json2html.transform(JSON.stringify(obj), rule);
+  }
+
+  function destructObj(obj) {
+    const resArr = [];
+    for (const i in obj){
+      resArr.push(parse({ [i]: obj[i] }));
+    }
+    return resArr.join('');
+  }
+
+  function makeList(arr) {
+    const resArr = [];
+    arr.forEach(item => Object.entries(item).map(row => {
+      const body = Array.isArray(row[1]) ? task4(row[1]) : row[1];
+    return resArr.push({ [row[0]]: body });
+  }));
+    return resArr.map(item => parse(item)).join('');
+  }
+  if(!Array.isArray(item)) return destructObj(item);
+  const resArr = item.map(item => Object.entries(item).map(row => ({ [row[0]]: row[1] })));
+  return '<ul>' + resArr.map(item => '<li>' + makeList(item) + '</li>').join('') + '</ul>';
+}
+
+
 const html1 = task1(raw1);
 const html2 = task2(raw2);
 const html3 = task3(raw3);
 const html41 = task4(raw41);
 const html42 = task4(raw42);
+const html5 = task5(raw5);
 
 app.get('/', function (req, res) {
-  const tests = () => html1 === answers.answer1
-    && html2 === answers.answer2
-    && html3 === answers.answer3
-    && html41 === answers.answer41
-    && html42 === answers.answer42;
-  res.send(tests());
+  const tests = [html1 === answers.answer1,
+    html2 === answers.answer2,
+    html3 === answers.answer3,
+    html41 === answers.answer41,
+    html42 === answers.answer42,
+    html5 === answers.answer5];
+  res.send(tests.map((test, i) => '<div><span>Тест ' + (i+1) + ': </span>' + test + '</div>').join(''));
 });
 
 app.get('/1', function (req, res) {
@@ -97,6 +143,10 @@ app.get('/41', function (req, res) {
 
 app.get('/42', function (req, res) {
   res.send(html42);
+});
+
+app.get('/5', function (req, res) {
+  res.send(html5);
 });
 
 app.listen(3000, function () {
