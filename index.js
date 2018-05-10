@@ -121,6 +121,8 @@ const html41 = task4(raw41);
 const html42 = task4(raw42);
 const html5 = task5(raw5);
 
+console.log(task5(raw41));
+
 // На основной странице результаты сверки с ответами из задания
 app.get('/', function (req, res) {
   const tests = [html1 === answers.answer1,
@@ -128,7 +130,11 @@ app.get('/', function (req, res) {
     html3 === answers.answer3,
     html41 === answers.answer41,
     html42 === answers.answer42,
-    html5 === answers.answer5];
+    html5 === answers.answer5,
+    task4(raw3) === answers.answer3,
+    task5(raw3) === answers.answer3,
+    task5(raw41) === answers.answer41,
+    task5(raw42) === answers.answer42];
   res.send(tests.map((test, i) => '<div><span>Тест ' + (i+1) + ': </span>' + test + '</div>').join(''));
 });
 
