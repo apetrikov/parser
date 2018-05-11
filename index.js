@@ -13,11 +13,14 @@ const raw5 = require('./src/source5.json');
 const answers = require('./src/answers');
 
 // Принимает json-массив объектов, из которых генерируются поля HTML
-const convert = arr => arr.map(el => `<h1>${el.title}</h1><p>${el.body}</p>`).join('');
+const convert = arr => arr.map(el => {
+  const pairs = Object.entries(el);
+  return `<${pairs[0][0]}>${pairs[0][1]}</${pairs[0][0]}><${pairs[1][0]}>${pairs[1][1]}</${pairs[1][0]}>`;
+}).join('');
 
 // На основной странице результат работы конвертера
 app.get('/', function (req, res) {
-  res.send(convert(raw1));
+  res.send(convert(raw2));
 });
 
 app.listen(3000, function () {
