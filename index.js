@@ -17,7 +17,9 @@ const convert = json => {
   const obj2HTML = obj => {
     let result = '';
     for (let key in obj) {
-      result  += `<${key}>${obj[key]}</${key}>`;
+      const value = obj[key];
+      const checkList = item => Array.isArray(item);
+      result  += `<${key}>${checkList(value) ? convert(value) : value}</${key}>`;
     };
     return result;
   };
@@ -25,12 +27,17 @@ const convert = json => {
   return Array.isArray(json) ? array2HTML(json) : obj2HTML(json)
 };
 
+
 console.log(convert(raw3));
 console.log(convert(raw3) === answers.answer3);
+console.log(convert(raw41));
+console.log(convert(raw41) === answers.answer41);
+console.log(convert(raw42));
+console.log(convert(raw42) === answers.answer42);
 
 // На основной странице результат работы конвертера
 app.get('/', function (req, res) {
-  res.send(convert(raw3));
+  res.send(convert(raw41));
 });
 
 app.listen(3000, function () {
