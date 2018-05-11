@@ -12,15 +12,25 @@ const raw42 = require('./src/source4_2.json');
 const raw5 = require('./src/source5.json');
 const answers = require('./src/answers');
 
-// Принимает json-массив объектов, из которых генерируются поля HTML
-const convert = arr => arr.map(el => {
-  const pairs = Object.entries(el);
-  return `<${pairs[0][0]}>${pairs[0][1]}</${pairs[0][0]}><${pairs[1][0]}>${pairs[1][1]}</${pairs[1][0]}>`;
-}).join('');
+// Принимает json, из которых генерируются поля HTML
+const convert = json => {
+  const obj2HTML = obj => {
+    let result = '';
+    for (let key in obj) {
+      result  += `<${key}>${obj[key]}</${key}>`;
+    };
+    return result;
+  };
+  const array2HTML = arr => '<ul>' + arr.map(el => '<li>' + obj2HTML(el) + '</li>').join('') + '</ul>';
+  return Array.isArray(json) ? array2HTML(json) : obj2HTML(json)
+};
+
+console.log(convert(raw3));
+console.log(convert(raw3) === answers.answer3);
 
 // На основной странице результат работы конвертера
 app.get('/', function (req, res) {
-  res.send(convert(raw2));
+  res.send(convert(raw3));
 });
 
 app.listen(3000, function () {
