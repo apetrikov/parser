@@ -2,7 +2,6 @@
 // Берёт файл, обрабатывает, выводит результат на порт 3000
 
 const express = require('express');
-const json2html = require('./lib/node-json2html');
 const app = express();
 
 const raw1 = require('./src/source1.json');
@@ -13,9 +12,12 @@ const raw42 = require('./src/source4_2.json');
 const raw5 = require('./src/source5.json');
 const answers = require('./src/answers');
 
-// На основной странице результаты сверки с ответами из задания
+// Принимает json-массив объектов, из которых генерируются поля HTML
+const convert = arr => arr.map(el => `<h1>${el.title}</h1><p>${el.body}</p>`).join('');
+
+// На основной странице результат работы конвертера
 app.get('/', function (req, res) {
-  res.send('Здесь будет последовательное решение задачи, словно заказчик вносит правки');
+  res.send(convert(raw1));
 });
 
 app.listen(3000, function () {
